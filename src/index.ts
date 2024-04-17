@@ -18,6 +18,7 @@ export const prologLanguage = LRLanguage.define({
       foldNodeProp.add({
         Application: foldInside,
       }),
+      // TODO: https://lezer.codemirror.net/docs/ref/#highlight.tags
       styleTags({
         Identifier: t.variableName,
         Boolean: t.bool,
@@ -28,6 +29,7 @@ export const prologLanguage = LRLanguage.define({
     ],
   }),
   languageData: {
+    // TODO: https://codemirror.net/docs/ref/#state.EditorState.languageDataAt
     commentTokens: { line: ";" },
   },
 });

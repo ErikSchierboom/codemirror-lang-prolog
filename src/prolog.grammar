@@ -1,14 +1,35 @@
 @top Program { term* }
 
-term { Atom | Variable }
+term { Atom | Variable | number }
+
+clause { Fact | Rule }
+
+number { Integer | Float | Rational }
 
 // @skip { whitespace }
 @skip { whitespace | LineComment }
 
 @tokens {
+  @precedence {
+    Rational,
+    Float,
+    Integer
+  }
+
   whitespace { @whitespace+ }
 
   LineComment { "%" ![\n]* }
+
+  Rational { signedInteger ("r" | "/") unsignedInteger }
+  Float { signedInteger "." unsignedInteger }
+  Integer { binaryInteger | octalInteger | hexInteger | signedInteger }
+
+  binaryInteger { "0b" $[01]+ }
+  octalInteger { "0o" $[0123456789]+ }
+  hexInteger { "0x" $[0123456789abcdef]+ }
+  signedInteger { "-"? @digit digit_group* }
+  unsignedInteger { @digit digit_group* }
+  digit_group { $[_ ]? @digit+ }
 
   Atom { unquotedAtom | quotedAtom }
   unquotedAtom { @asciiLowercase identifierChar* }
@@ -21,5 +42,4 @@ term { Atom | Variable }
 
 @detectDelim
 
-// 
 // https://github.com/lezer-parser/generator/blob/d827142436db3724af4b4dd9162132ca343f34e0/src/node.ts#L303

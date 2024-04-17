@@ -1,0 +1,25 @@
+@top Program { term* }
+
+term { Atom | Variable }
+
+// @skip { whitespace }
+@skip { whitespace | LineComment }
+
+@tokens {
+  whitespace { @whitespace+ }
+
+  LineComment { "%" ![\n]* }
+
+  Atom { unquotedAtom | quotedAtom }
+  unquotedAtom { @asciiLowercase identifierChar* }
+  quotedAtom { "'" ![\']+ "'" }
+
+  Variable { (@asciiUppercase | "_") identifierChar* }
+
+  identifierChar { @asciiLetter | @digit | "_" }
+}
+
+@detectDelim
+
+// 
+// https://github.com/lezer-parser/generator/blob/d827142436db3724af4b4dd9162132ca343f34e0/src/node.ts#L303

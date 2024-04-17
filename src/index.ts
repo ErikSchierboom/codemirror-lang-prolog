@@ -1,4 +1,4 @@
-import { parser } from "./syntax.grammar";
+import { parser } from "./prolog.grammar";
 import {
   LRLanguage,
   LanguageSupport,

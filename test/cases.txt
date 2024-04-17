@@ -48,3 +48,15 @@ Program(
   Integer, Integer, Integer, Integer, Integer, Integer, Integer,
   Float, Float,
   Rational, Rational, Rational)
+
+# Strings
+
+""
+"a"
+"\"\a\n\\"
+"\u1234\U12345678"
+"\x1e"
+
+==>
+
+Program(String, String, String, String, String)

@@ -1,10 +1,12 @@
 @top Program { term* }
 
-term { Atom | Variable | number }
+term { Atom | Variable | number | compoundTerm }
 
 clause { Fact | Rule }
 
 number { Integer | Float | Rational }
+
+compoundTerm { String }
 
 // @skip { whitespace }
 @skip { whitespace | LineComment }
@@ -18,18 +20,34 @@ number { Integer | Float | Rational }
 
   whitespace { @whitespace+ }
 
+  String { '"' stringContent '"' }
+  stringContent { (HexEscapeChar | UnicodeEscapeChar | EscapeChar | RegularChar)* }
+
+  HexEscapeChar { "\\x" hexDigit hexDigit }
+  UnicodeEscapeChar { 
+    "\\u" hexDigit hexDigit hexDigit hexDigit |
+    "\\U" hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit
+  }
+  EscapeChar { "\\" $[abcefnrsv\\'"`] }
+  RegularChar { !["\\] }
+
   LineComment { "%" ![\n]* }
 
   Rational { signedInteger ("r" | "/") unsignedInteger }
   Float { signedInteger "." unsignedInteger }
   Integer { binaryInteger | octalInteger | hexInteger | signedInteger }
 
-  binaryInteger { "0b" $[01]+ }
-  octalInteger { "0o" $[0123456789]+ }
-  hexInteger { "0x" $[0123456789abcdef]+ }
-  signedInteger { "-"? @digit digit_group* }
-  unsignedInteger { @digit digit_group* }
-  digit_group { $[_ ]? @digit+ }
+  binaryInteger { "0b" binaryDigit+ }
+  binaryDigit { $[01] }
+  octalInteger { "0o" octalDigit+ }
+  octalDigit { $[0-7] }
+  hexInteger { "0x" hexDigit+ }
+  hexDigit { $[0-9a-fA-F] }
+
+  signedInteger { "-"? @digit digitGroup* }
+  unsignedInteger { @digit digitGroup* }
+
+  digitGroup { $[_ ]? @digit+ }
 
   Atom { unquotedAtom | quotedAtom }
   unquotedAtom { @asciiLowercase identifierChar* }

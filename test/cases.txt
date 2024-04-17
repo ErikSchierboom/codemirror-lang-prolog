@@ -1,4 +1,5 @@
-# Booleans
+% Line comment
+/* Block comment */
 
 #t
 #f

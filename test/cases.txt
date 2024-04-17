@@ -60,3 +60,14 @@ Program(
 ==>
 
 Program(String, String, String, String, String)
+
+# Lists
+
+[]
+[a]
+[[]]
+[a, b]
+
+==>
+
+Program(List, List(Atom), List(List), List(Atom, Atom))

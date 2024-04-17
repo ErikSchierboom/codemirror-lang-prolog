@@ -6,7 +6,13 @@ clause { Fact | Rule }
 
 number { Integer | Float | Rational }
 
-compoundTerm { String }
+compoundTerm { String | List }
+
+List { "[" commaSeparated<term> "]" }
+
+commaSeparated<content> {
+  "" | content ("," content?)*
+}
 
 // @skip { whitespace }
 @skip { whitespace | LineComment }

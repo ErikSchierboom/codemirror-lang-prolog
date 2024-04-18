@@ -7,6 +7,16 @@ term { literal | compound | Atom | Variable }
 literal { Number | String }
 Number { Rational | Float | Hex | Octal | Binary | Integer }
 
+@local tokens {  
+  stringEnd[@name='"'] { '"' }
+  stringEscape { HexChar | UnicodeChar | EscapeChar }
+  @else stringContent
+}
+
+@skip {} {
+  String { '"' (stringContent | stringEscape)* stringEnd }
+}
+
 compound { List }
 List { "[" commaSep<term> "]" }
 
@@ -20,6 +30,13 @@ commaSep<content> { "" | content ("," content)* }
   whitespace { @whitespace+ }
 
   LineComment { "%" ![\n]* }
+
+  HexChar { "\\x" hexDigit hexDigit }
+  UnicodeChar { 
+    "\\u" hexDigit hexDigit hexDigit hexDigit |
+    "\\U" hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit
+  }
+  EscapeChar { "\\" $[abcefnrsv\\'"`] }
 
   Rational { signed<digits<@digit>> $[r/] digits<@digit> }
   Float { signed<@digit>+ "." @digit+ }
@@ -40,17 +57,6 @@ commaSep<content> { "" | content ("," content)* }
   }
   Variable { (@asciiUppercase | "_") wordChar* }
   wordChar { @asciiLetter | @digit | "_" }
-
-  String { '"' Char* '"' }
-  Char { HexEscapeChar | UnicodeEscapeChar | EscapeChar | RegularChar }
-
-  HexEscapeChar { "\\x" hexDigit hexDigit }
-  UnicodeEscapeChar { 
-    "\\u" hexDigit hexDigit hexDigit hexDigit |
-    "\\U" hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit
-  }
-  EscapeChar { "\\" $[abcefnrsv\\'"`] }
-  RegularChar { !["\\] }
 
   // A fallback that matches any other character in case all
   // else fails. Needed to get a nice output and avoid strange

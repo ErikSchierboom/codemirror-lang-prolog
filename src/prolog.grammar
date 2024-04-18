@@ -2,7 +2,7 @@
 
 @skip { whitespace | LineComment }
 
-literal { Number }
+literal { Number | Atom | Variable }
 
 Number { Rational | Float | Hex | Octal | Binary | Integer }
 
@@ -25,8 +25,13 @@ Number { Rational | Float | Hex | Octal | Binary | Integer }
   signed<digit> { "-"? digit}
   prefixed<prefix, digit> { signed<prefix digits<digit>> }
 
+  Atom {
+    @asciiLowercase wordChar* |
+    "'" ("\\'" | ![\\'])+ "'"
+  }
+  Variable { (@asciiUppercase | "_") wordChar* }
+  wordChar { @asciiLetter | @digit | "_" }
 
-  //   Atom { unquotedAtom | quotedAtom }
 //   unquotedAtom { lowerIdentifier }
 //   quotedAtom { "'" ![\']+ "'" }
 

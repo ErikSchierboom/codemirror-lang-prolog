@@ -63,3 +63,28 @@ Program(Number(Float), Number(Float), Number(Float), Number(Float))
 ==>
 
 Program(Number(Rational), Number(Rational), Number(Rational), Number(Rational))
+
+# Atoms
+
+age
+name123
+h_1
+lowerAndUpper
+'some'
+'Upper'
+'pre\'tty awesome'
+
+==>
+
+Program(Atom, Atom, Atom, Atom, Atom, Atom, Atom)
+
+# Variables
+
+Name
+_Unused
+ALLCAPS
+Upper_Letter_And_Underscore
+
+==>
+
+Program(Variable, Variable, Variable, Variable)

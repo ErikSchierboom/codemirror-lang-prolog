@@ -1,6 +1,6 @@
 @top Program { literal* }
 
-@skip { whitespace }
+@skip { whitespace | LineComment }
 
 literal { Number }
 
@@ -12,6 +12,8 @@ Number { Rational | Float | Hex | Octal | Binary | Integer }
   }
 
   whitespace { @whitespace+ }
+
+  LineComment { "%" ![\n]* }
 
   Rational { signed<digits<@digit>> $[r/] digits<@digit> }
   Float { signed<@digit>+ "." @digit+ }

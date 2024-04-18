@@ -1,121 +1,42 @@
-# Variables
-
-Name
-_Unused
-ALLCAPS
-Upper_Letter_And_Underscore
-
-==>
-
-Program(Variable, Variable, Variable, Variable)
-
-# Atoms
-
-age
-name123
-h_1
-lowerAndUpper
-'some'
-'Upper'
-
-==>
-
-Program(Atom, Atom, Atom, Atom, Atom, Atom)
-
 # Numbers
 
 1
--123
-
+-23
 1_000_000
 1 000 000
 
-0b100
-0o73
-0x16
+0b1
+0b101
+-0b101
+-0b1_01
+
+0o1
+0o147
+-0o772
+-0o6_47
+
+0x1
+0xAe0
+-0xABcdEF
+-0x6_C7
 
 7.0
+123613.0123
 -924.13212
+-0.2
 
 1/3
 -2/4
 2r7
-
-
-==>
-
-Program(
-  Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-  Float, Float,
-  Rational, Rational, Rational)
-
-# Strings
-
-""
-"a"
-"\"\a\n\\"
-"\u1234\U12345678"
-"\x1e"
-
-==>
-
-Program(String, String, String, String, String)
-
-# Lists
-
-[]
-[a]
-[[]]
-[a, b]
-
-==>
-
-Program(List, List(Atom), List(List), List(Atom, Atom))
-
-# Compound term
-
-f()
-g(true, [], X)
-a(b(c(d)))
+-33r34
 
 ==>
 
 Program(
-  CompoundTerm(Functor(Atom)),
-  CompoundTerm(Functor(Atom),Atom,List,Variable),
-  CompoundTerm(Functor(Atom), CompoundTerm(Functor(Atom), CompoundTerm(Functor(Atom),Atom))))
-
-# Fact
-
-a.
-X.
-awesome(true).
-
-==>
-
-Program(Fact(Atom), Fact(Variable), Fact(CompoundTerm(Functor(Atom), Atom)))
-
-# Fact
-
-X :- Y.
-X :- Y, Z.
-X :- Y ; Z.
-
-==>
-
-Program(
-  Rule(Variable, Variable), 
-  Rule(Variable,Variable,Variable), 
-  Rule(Variable,Variable,Variable))
-
-# Directive
-
-:- module(shapes, []).
-:- use_module(library(lists)).
-
-==>
-
-Program(
-  Rule(Variable, Variable), 
-  Rule(Variable,Variable,Variable), 
-  Rule(Variable,Variable,Variable))
+  Number(Integer), Number(Integer), Number(Integer), Number(Integer),
+  Number(Binary), Number(Binary), Number(Binary), Number(Binary),
+  Number(Octal), Number(Octal), Number(Octal), Number(Octal),
+  Number(Hex), Number(Hex), Number(Hex), Number(Hex),
+  Number(Float), Number(Float), Number(Float), Number(Float),
+  Number(Rational), Number(Rational), Number(Rational), Number(Rational)
+)

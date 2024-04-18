@@ -71,3 +71,16 @@ Program(String, String, String, String, String)
 ==>
 
 Program(List, List(Atom), List(List), List(Atom, Atom))
+
+# Compound term
+
+f()
+g(true, [], X)
+a(b(c(d)))
+
+==>
+
+Program(
+  CompoundTerm(Functor(Atom)),
+  CompoundTerm(Functor(Atom),Atom,List,Variable),
+  CompoundTerm(Functor(Atom), CompoundTerm(Functor(Atom), CompoundTerm(Functor(Atom),Atom))))

@@ -6,12 +6,17 @@ clause { Fact | Rule }
 
 number { Integer | Float | Rational }
 
-compoundTerm { String | List }
-
+compoundTerm { CompoundTerm | String | List }
+CompoundTerm { Functor parameterList<term> }
 List { "[" commaSeparated<term> "]" }
+Functor { Atom }
 
 commaSeparated<content> {
   "" | content ("," content?)*
+}
+
+parameterList<content> {
+  "(" commaSeparated<content> ")"
 }
 
 // @skip { whitespace }
@@ -56,11 +61,13 @@ commaSeparated<content> {
   digitGroup { $[_ ]? @digit+ }
 
   Atom { unquotedAtom | quotedAtom }
-  unquotedAtom { @asciiLowercase identifierChar* }
+  unquotedAtom { lowerIdentifier }
   quotedAtom { "'" ![\']+ "'" }
 
-  Variable { (@asciiUppercase | "_") identifierChar* }
+  Variable { upperIdentifier }
 
+  lowerIdentifier { @asciiLowercase identifierChar* }
+  upperIdentifier { (@asciiUppercase | "_") identifierChar* }
   identifierChar { @asciiLetter | @digit | "_" }
 }
 

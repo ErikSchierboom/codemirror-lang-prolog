@@ -17,9 +17,14 @@ Number { Rational | Float | Hex | Octal | Binary | Integer }
   String { '"' (stringContent | stringEscape)* stringEnd }
 }
 
-compound { List }
+compound { List | CompoundTerm }
 List { "[" commaSep<term> "]" }
 
+CompoundTerm { Functor Arguments }
+Functor { Atom }
+Arguments { parenthesized<commaSep<term>> }
+
+parenthesized<content> { "(" content ")" }
 commaSep<content> { "" | content ("," content)* }
 
 @tokens {
@@ -63,58 +68,3 @@ commaSep<content> { "" | content ("," content)* }
   // overlapping tokens!
   else { _ }
 }
-
-
-
-// @top Program { (Directive | clause | term)* }
-
-// @precedence {
-//   Fact,
-//   term
-// }
-
-// Directive { ":-" term "." }
-
-
-// term { Atom | Variable | number | compoundTerm }
-
-// clause { Fact | Rule }
-
-// number { Integer | Float | Rational }
-
-// predicate { Atom | Variable | compoundTerm }
-
-// Fact { predicate "." }
-// Rule { predicate ":-" rules "." }
-
-// rules { predicate (("," | ";") predicate)* }
-
-// compoundTerm { CompoundTerm | String | List }
-// CompoundTerm { Functor parameterList<term> }
-// Functor { Atom }
-// List { "[" commaSeparated<term> "]" }
-
-// commaSeparated<content> {
-//   "" | content ("," content?)*
-// }
-
-// parameterList<content> {
-//   parenthesized<commaSeparated<content>>
-// }
-
-// parenthesizedOptional<content> {
-//   parenthesized<content> | content
-// }
-
-// parenthesized<content> {
-//   "(" content ")"
-// }
-
-
-// @tokens {
-//   Cut { "!" } 
-// }
-
-// @detectDelim
-
-// // https://github.com/lezer-parser/generator/blob/d827142436db3724af4b4dd9162132ca343f34e0/src/node.ts#L303

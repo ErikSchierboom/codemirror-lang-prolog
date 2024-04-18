@@ -64,6 +64,19 @@ Program(Number(Float), Number(Float), Number(Float), Number(Float))
 
 Program(Number(Rational), Number(Rational), Number(Rational), Number(Rational))
 
+# Strings
+
+""
+"a"
+"a b c d e"
+"\"\a\n\\"
+"\u1234\U12345678"
+"\x1e"
+
+==>
+
+Program(String, String, String, String, String, String)
+
 # Atoms
 
 age
@@ -89,19 +102,6 @@ Upper_Letter_And_Underscore
 
 Program(Variable, Variable, Variable, Variable)
 
-# Strings
-
-""
-"a"
-"a b c d e"
-"\"\a\n\\"
-"\u1234\U12345678"
-"\x1e"
-
-==>
-
-Program(String, String, String, String, String, String)
-
 # Lists
 
 []
@@ -112,3 +112,18 @@ Program(String, String, String, String, String, String)
 ==>
 
 Program(List, List(Atom), List(List), List(Atom, String, Variable))
+
+# Compound term
+
+f()
+g(true, [], X)
+a(b(c(d)))
+'test'(1,2,3)
+
+==>
+
+Program(
+  CompoundTerm(Functor(Atom), Arguments),
+  CompoundTerm(Functor(Atom), Arguments(Atom, List, Variable)),
+  CompoundTerm(Functor(Atom), Arguments(CompoundTerm(Functor(Atom), Arguments(CompoundTerm(Functor(Atom), Arguments(Atom)))))),
+  CompoundTerm(Functor(Atom), Arguments(Number(Integer), Number(Integer), Number(Integer))))

@@ -1,4 +1,4 @@
-@top Program { (Directive | Fact | term)* }
+@top Program { (predicate | term)* }
 
 @skip { whitespace | LineComment }
 
@@ -17,15 +17,18 @@ Number { Rational | Float | Hex | Octal | Binary | Integer }
   String { '"' (stringContent | stringEscape)* stringEnd }
 }
 
-compound { List | CompoundTerm }
-List { "[" commaSep<term> "]" }
+compound { 
+  List { "[" commaSep<term> "]" } |
+  CompoundTerm { Functor Arguments }
+}
 
-CompoundTerm { Functor Arguments }
 Functor { Atom }
 Arguments { parenthesized<commaSep<term>> }
 
-Directive { ":-" commaSep<term> "." }
-Fact { Functor Arguments "." }
+predicate {
+  Fact { Functor Arguments "." } |
+  Directive { ":-" commaSep<term> "." }
+}
 
 parenthesized<content> { "(" content ")" }
 commaSep<content> { "" | content ("," content)* }

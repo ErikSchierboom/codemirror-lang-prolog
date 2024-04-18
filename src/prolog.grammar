@@ -1,4 +1,4 @@
-@top Program { (Directive | term)* }
+@top Program { (Directive | Fact | term)* }
 
 @skip { whitespace | LineComment }
 
@@ -25,6 +25,7 @@ Functor { Atom }
 Arguments { parenthesized<commaSep<term>> }
 
 Directive { ":-" commaSep<term> "." }
+Fact { Functor Arguments "." }
 
 parenthesized<content> { "(" content ")" }
 commaSep<content> { "" | content ("," content)* }

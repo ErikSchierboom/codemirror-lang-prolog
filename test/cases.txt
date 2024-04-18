@@ -128,7 +128,7 @@ Program(
   CompoundTerm(Functor(Atom), Arguments(CompoundTerm(Functor(Atom), Arguments(CompoundTerm(Functor(Atom), Arguments(Atom)))))),
   CompoundTerm(Functor(Atom), Arguments(Number(Integer), Number(Integer), Number(Integer))))
 
-# Directive
+# Directives
 
 :- use_module(library(clpfd)).
 :- set_prolog_flag(decimals, real).
@@ -138,3 +138,15 @@ Program(
 Program(
   Directive(CompoundTerm(Functor(Atom),Arguments(CompoundTerm(Functor(Atom),Arguments(Atom))))),
   Directive(CompoundTerm(Functor(Atom),Arguments(Atom,Atom))))
+
+# Facts
+
+dutch(erik).
+likes(erik, music).
+
+==>
+
+Program(
+  Fact(Functor(Atom),Arguments(Atom)),
+  Fact(Functor(Atom),Arguments(Atom,Atom))  
+)

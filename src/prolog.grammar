@@ -2,7 +2,7 @@
 
 @skip { whitespace | LineComment }
 
-literal { Number | Atom | Variable }
+literal { Number | String | Atom | Variable }
 
 Number { Rational | Float | Hex | Octal | Binary | Integer }
 
@@ -17,10 +17,13 @@ Number { Rational | Float | Hex | Octal | Binary | Integer }
 
   Rational { signed<digits<@digit>> $[r/] digits<@digit> }
   Float { signed<@digit>+ "." @digit+ }
-  Hex { prefixed<"0x", $[0-9a-fA-F]> }
-  Octal { prefixed<"0o", $[0-7]> }
-  Binary { prefixed<"0b", $[01]> }
-  Integer { signed<digits<@digit>> }  
+  Hex { prefixed<"0x", hexDigit> }
+  Octal { prefixed<"0o", octalDigit> }
+  Binary { prefixed<"0b", binaryDigit> }
+  Integer { signed<digits<@digit>> }
+  hexDigit { $[0-9a-fA-F] }
+  octalDigit { $[0-7] }
+  binaryDigit { $[01] }
   digits<digit> { digit ($[\_ ]? digit)* }
   signed<digit> { "-"? digit}
   prefixed<prefix, digit> { signed<prefix digits<digit>> }
@@ -32,8 +35,16 @@ Number { Rational | Float | Hex | Octal | Binary | Integer }
   Variable { (@asciiUppercase | "_") wordChar* }
   wordChar { @asciiLetter | @digit | "_" }
 
-//   unquotedAtom { lowerIdentifier }
-//   quotedAtom { "'" ![\']+ "'" }
+  String { '"' Char* '"' }
+  Char { HexEscapeChar | UnicodeEscapeChar | EscapeChar | RegularChar }
+
+  HexEscapeChar { "\\x" hexDigit hexDigit }
+  UnicodeEscapeChar { 
+    "\\u" hexDigit hexDigit hexDigit hexDigit |
+    "\\U" hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit
+  }
+  EscapeChar { "\\" $[abcefnrsv\\'"`] }
+  RegularChar { !["\\] }
 
   // A fallback that matches any other character in case all
   // else fails. Needed to get a nice output and avoid strange
@@ -92,53 +103,11 @@ Number { Rational | Float | Hex | Octal | Binary | Integer }
 
 // @tokens {
 //   @precedence {
-//     Rational,
-//     Float,
-//     Integer
-//   }
 
-//   whitespace { @whitespace+ }
 
-//   String { '"' stringContent '"' }
-//   stringContent { (HexEscapeChar | UnicodeEscapeChar | EscapeChar | RegularChar)* }
-
-//   HexEscapeChar { "\\x" hexDigit hexDigit }
-//   UnicodeEscapeChar { 
-//     "\\u" hexDigit hexDigit hexDigit hexDigit |
-//     "\\U" hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit
-//   }
-//   EscapeChar { "\\" $[abcefnrsv\\'"`] }
-//   RegularChar { !["\\] }
-
-//   LineComment { "%" ![\n]* }
-
-//   Rational { signedInteger ("r" | "/") unsignedInteger }
-//   Float { signedInteger "." unsignedInteger }
-//   Integer { binaryInteger | octalInteger | hexInteger | signedInteger }
 
 //   Cut { "!" } 
 
-//   binaryInteger { "0b" binaryDigit+ }
-//   binaryDigit { $[01] }
-//   octalInteger { "0o" octalDigit+ }
-//   octalDigit { $[0-7] }
-//   hexInteger { "0x" hexDigit+ }
-//   hexDigit { $[0-9a-fA-F] }
-
-//   signedInteger { "-"? @digit digitGroup* }
-//   unsignedInteger { @digit digitGroup* }
-
-//   digitGroup { $[_ ]? @digit+ }
-
-//   Atom { unquotedAtom | quotedAtom }
-//   unquotedAtom { lowerIdentifier }
-//   quotedAtom { "'" ![\']+ "'" }
-
-//   Variable { upperIdentifier }
-
-//   lowerIdentifier { @asciiLowercase identifierChar* }
-//   upperIdentifier { (@asciiUppercase | "_") identifierChar* }
-//   identifierChar { @asciiLetter | @digit | "_" }
 // }
 
 // @detectDelim

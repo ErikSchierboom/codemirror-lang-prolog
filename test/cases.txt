@@ -88,3 +88,16 @@ Upper_Letter_And_Underscore
 ==>
 
 Program(Variable, Variable, Variable, Variable)
+
+# Strings
+
+""
+"a"
+"a b c d e"
+"\"\a\n\\"
+"\u1234\U12345678"
+"\x1e"
+
+==>
+
+Program(String, String, String, String, String, String)

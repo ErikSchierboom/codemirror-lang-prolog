@@ -13,16 +13,20 @@ Number { Rational | Float | Hex | Octal | Binary | Integer }
 
   whitespace { @whitespace+ }
 
-  prefixedNumber<prefix, digit> { signed<prefix digits<digit>> }
-  digits<digit> { digit ($[\_ ]? digit)* }
-  signed<digit> { "-"? digit}
-
   Rational { signed<digits<@digit>> $[r/] digits<@digit> }
   Float { signed<@digit>+ "." @digit+ }
-  Hex { prefixedNumber<"0x", $[0-9a-fA-F]> }
-  Octal { prefixedNumber<"0o", $[0-7]> }
-  Binary { prefixedNumber<"0b", $[01]> }
-  Integer { signed<digits<@digit>> }
+  Hex { prefixed<"0x", $[0-9a-fA-F]> }
+  Octal { prefixed<"0o", $[0-7]> }
+  Binary { prefixed<"0b", $[01]> }
+  Integer { signed<digits<@digit>> }  
+  digits<digit> { digit ($[\_ ]? digit)* }
+  signed<digit> { "-"? digit}
+  prefixed<prefix, digit> { signed<prefix digits<digit>> }
+
+
+  //   Atom { unquotedAtom | quotedAtom }
+//   unquotedAtom { lowerIdentifier }
+//   quotedAtom { "'" ![\']+ "'" }
 
   // A fallback that matches any other character in case all
   // else fails. Needed to get a nice output and avoid strange

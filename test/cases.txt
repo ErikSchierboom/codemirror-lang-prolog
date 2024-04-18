@@ -94,3 +94,28 @@ awesome(true).
 ==>
 
 Program(Fact(Atom), Fact(Variable), Fact(CompoundTerm(Functor(Atom), Atom)))
+
+# Fact
+
+X :- Y.
+X :- Y, Z.
+X :- Y ; Z.
+
+==>
+
+Program(
+  Rule(Variable, Variable), 
+  Rule(Variable,Variable,Variable), 
+  Rule(Variable,Variable,Variable))
+
+# Directive
+
+:- module(shapes, []).
+:- use_module(library(lists)).
+
+==>
+
+Program(
+  Rule(Variable, Variable), 
+  Rule(Variable,Variable,Variable), 
+  Rule(Variable,Variable,Variable))

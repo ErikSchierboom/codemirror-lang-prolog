@@ -1,21 +1,25 @@
-@top Program { (clause | term)* }
+@top Program { (Directive | clause | term)* }
 
 @precedence {
   Fact,
   term
 }
 
+Directive { ":-" term "." }
+
 
 term { Atom | Variable | number | compoundTerm }
 
-clause { Fact }
+clause { Fact | Rule }
 
 number { Integer | Float | Rational }
 
 predicate { Atom | Variable | compoundTerm }
 
 Fact { predicate "." }
-// Rule { predicate parameterList<term> ":-" commaSeparated<term> "."}
+Rule { predicate ":-" rules "." }
+
+rules { predicate (("," | ";") predicate)* }
 
 compoundTerm { CompoundTerm | String | List }
 CompoundTerm { Functor parameterList<term> }
@@ -27,7 +31,15 @@ commaSeparated<content> {
 }
 
 parameterList<content> {
-  "(" commaSeparated<content> ")"
+  parenthesized<commaSeparated<content>>
+}
+
+parenthesizedOptional<content> {
+  parenthesized<content> | content
+}
+
+parenthesized<content> {
+  "(" content ")"
 }
 
 // @skip { whitespace }
@@ -58,6 +70,8 @@ parameterList<content> {
   Rational { signedInteger ("r" | "/") unsignedInteger }
   Float { signedInteger "." unsignedInteger }
   Integer { binaryInteger | octalInteger | hexInteger | signedInteger }
+
+  Cut { "!" } 
 
   binaryInteger { "0b" binaryDigit+ }
   binaryDigit { $[01] }

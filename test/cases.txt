@@ -84,3 +84,13 @@ Program(
   CompoundTerm(Functor(Atom)),
   CompoundTerm(Functor(Atom),Atom,List,Variable),
   CompoundTerm(Functor(Atom), CompoundTerm(Functor(Atom), CompoundTerm(Functor(Atom),Atom))))
+
+# Fact
+
+a.
+X.
+awesome(true).
+
+==>
+
+Program(Fact(Atom), Fact(Variable), Fact(CompoundTerm(Functor(Atom), Atom)))

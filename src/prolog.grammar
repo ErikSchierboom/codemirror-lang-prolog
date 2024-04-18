@@ -1,15 +1,26 @@
-@top Program { term* }
+@top Program { (clause | term)* }
+
+@precedence {
+  Fact,
+  term
+}
+
 
 term { Atom | Variable | number | compoundTerm }
 
-clause { Fact | Rule }
+clause { Fact }
 
 number { Integer | Float | Rational }
 
+predicate { Atom | Variable | compoundTerm }
+
+Fact { predicate "." }
+// Rule { predicate parameterList<term> ":-" commaSeparated<term> "."}
+
 compoundTerm { CompoundTerm | String | List }
 CompoundTerm { Functor parameterList<term> }
-List { "[" commaSeparated<term> "]" }
 Functor { Atom }
+List { "[" commaSeparated<term> "]" }
 
 commaSeparated<content> {
   "" | content ("," content?)*

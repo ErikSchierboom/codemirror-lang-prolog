@@ -148,5 +148,16 @@ likes(erik, music).
 
 Program(
   Fact(Functor(Atom),Arguments(Atom)),
-  Fact(Functor(Atom),Arguments(Atom,Atom))  
-)
+  Fact(Functor(Atom),Arguments(Atom,Atom)))
+
+# Rules
+
+friends(X, Y) :- likes(X, Z).
+
+==>
+
+Program(
+  Rule(
+    Functor(Atom),
+    Arguments(Variable,Variable),
+    CompoundTerm(Functor(Atom),Arguments(Variable,Variable))))

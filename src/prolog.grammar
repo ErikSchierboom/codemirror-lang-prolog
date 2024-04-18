@@ -2,7 +2,7 @@
 
 @skip { whitespace | LineComment }
 
-term { literal | compound | Atom | Variable }
+term { literal | compound | Atom | Variable | Cut }
 
 literal { Number | String }
 Number { Rational | Float | Hex | Octal | Binary | Integer }
@@ -17,18 +17,19 @@ Number { Rational | Float | Hex | Octal | Binary | Integer }
   String { '"' (stringContent | stringEscape)* stringEnd }
 }
 
+predicate {
+  Rule { Functor Arguments ~functor ":-" commaSep<term> "."} |  
+  Directive { ":-" commaSep<term> "." } |
+  Fact { Functor Arguments ~functor "." }  
+}
+
 compound { 
   List { "[" commaSep<term> "]" } |
-  CompoundTerm { Functor Arguments }
+  CompoundTerm { Functor Arguments ~functor }
 }
 
 Functor { Atom }
 Arguments { parenthesized<commaSep<term>> }
-
-predicate {
-  Fact { Functor Arguments "." } |
-  Directive { ":-" commaSep<term> "." }
-}
 
 parenthesized<content> { "(" content ")" }
 commaSep<content> { "" | content ("," content)* }
@@ -41,6 +42,8 @@ commaSep<content> { "" | content ("," content)* }
   whitespace { @whitespace+ }
 
   LineComment { "%" ![\n]* }
+
+  Cut { "!" }
 
   HexChar { "\\x" hexDigit hexDigit }
   UnicodeChar { 

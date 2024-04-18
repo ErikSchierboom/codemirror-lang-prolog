@@ -127,3 +127,14 @@ Program(
   CompoundTerm(Functor(Atom), Arguments(Atom, List, Variable)),
   CompoundTerm(Functor(Atom), Arguments(CompoundTerm(Functor(Atom), Arguments(CompoundTerm(Functor(Atom), Arguments(Atom)))))),
   CompoundTerm(Functor(Atom), Arguments(Number(Integer), Number(Integer), Number(Integer))))
+
+# Directive
+
+:- use_module(library(clpfd)).
+:- set_prolog_flag(decimals, real).
+
+==>
+
+Program(
+  Directive(CompoundTerm(Functor(Atom),Arguments(CompoundTerm(Functor(Atom),Arguments(Atom))))),
+  Directive(CompoundTerm(Functor(Atom),Arguments(Atom,Atom))))

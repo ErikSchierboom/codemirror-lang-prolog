@@ -1,4 +1,4 @@
-@top Program { term* }
+@top Program { (Directive | term)* }
 
 @skip { whitespace | LineComment }
 
@@ -23,6 +23,8 @@ List { "[" commaSep<term> "]" }
 CompoundTerm { Functor Arguments }
 Functor { Atom }
 Arguments { parenthesized<commaSep<term>> }
+
+Directive { ":-" commaSep<term> "." }
 
 parenthesized<content> { "(" content ")" }
 commaSep<content> { "" | content ("," content)* }

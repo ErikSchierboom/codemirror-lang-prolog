@@ -1,29 +1,59 @@
-# Numbers 
+# Numbers - Integer
 
 1
 -23
 1_000_000
 1 000 000
 
+==>
+
+Program(Number(Integer), Number(Integer), Number(Integer), Number(Integer))
+
+# Numbers - Binary
+
 0b1
 0b101
 -0b101
 -0b1_01
+
+==>
+
+Program(Number(Binary), Number(Binary), Number(Binary), Number(Binary))
+
+# Numbers - Octal
 
 0o1
 0o147
 -0o772
 -0o6_47
 
+==>
+
+Program(Number(Octal), Number(Octal), Number(Octal), Number(Octal))
+
+# Numbers - Hex
+
 0x1
 0xAe0
 -0xABcdEF
 -0x6_C7
 
+==>
+
+Program(Number(Hex), Number(Hex), Number(Hex), Number(Hex))
+
+# Numbers - Float
+
 7.0
 123613.0123
 -924.13212
 -0.2
+
+==>
+
+Program(Number(Float), Number(Float), Number(Float), Number(Float))
+
+# Numbers - Rational
 
 1/3
 -2/4
@@ -32,11 +62,4 @@
 
 ==>
 
-Program(
-  Number(Integer), Number(Integer), Number(Integer), Number(Integer),
-  Number(Binary), Number(Binary), Number(Binary), Number(Binary),
-  Number(Octal), Number(Octal), Number(Octal), Number(Octal),
-  Number(Hex), Number(Hex), Number(Hex), Number(Hex),
-  Number(Float), Number(Float), Number(Float), Number(Float),
-  Number(Rational), Number(Rational), Number(Rational), Number(Rational)
-)
+Program(Number(Rational), Number(Rational), Number(Rational), Number(Rational))

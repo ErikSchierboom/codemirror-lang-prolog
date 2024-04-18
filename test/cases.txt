@@ -101,3 +101,14 @@ Program(Variable, Variable, Variable, Variable)
 ==>
 
 Program(String, String, String, String, String, String)
+
+# Lists
+
+[]
+[a]
+[[]]
+[a, "cool", X]
+
+==>
+
+Program(List, List(Atom), List(List), List(Atom, String, Variable))

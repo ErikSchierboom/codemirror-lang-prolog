@@ -1,10 +1,16 @@
-@top Program { literal* }
+@top Program { term* }
 
 @skip { whitespace | LineComment }
 
-literal { Number | String | Atom | Variable }
+term { literal | compound | Atom | Variable }
 
+literal { Number | String }
 Number { Rational | Float | Hex | Octal | Binary | Integer }
+
+compound { List }
+List { "[" commaSep<term> "]" }
+
+commaSep<content> { "" | content ("," content)* }
 
 @tokens {
   @precedence {
@@ -98,16 +104,9 @@ Number { Rational | Float | Hex | Octal | Binary | Integer }
 //   "(" content ")"
 // }
 
-// // @skip { whitespace }
-// @skip { whitespace | LineComment }
 
 // @tokens {
-//   @precedence {
-
-
-
 //   Cut { "!" } 
-
 // }
 
 // @detectDelim

@@ -107,11 +107,11 @@ Program(Variable, Variable, Variable, Variable)
 []
 [a]
 [[]]
-[a, "cool", X]
+[a,"cool",X]
 
 ==>
 
-Program(List, List(Atom), List(List), List(Atom, String, Variable))
+Program(List,List(Atom),List(List),List(Atom,String,Variable))
 
 # Compound term
 
@@ -153,11 +153,9 @@ Program(
 # Rules
 
 friends(X, Y) :- likes(X, Z).
+friends(X, Y) :- likes(X, Z), likes(Y, Z).
+friends(X, Y) :- likes(X, Z) ; likes(Y, Z).
 
 ==>
 
-Program(
-  Rule(
-    Functor(Atom),
-    Arguments(Variable,Variable),
-    CompoundTerm(Functor(Atom),Arguments(Variable,Variable))))
+Program(CompoundTerm(Functor(Atom),Arguments(Variable,Variable)),Directive(CompoundTerm(Functor(Atom),Arguments(Variable,Variable))),CompoundTerm(Functor(Atom),Arguments(Variable,Variable)),Directive(CompoundTerm(Functor(Atom),Arguments(Variable,Variable)),CompoundTerm(Functor(Atom),Arguments(Variable,Variable))),Rule(Functor(Atom),Arguments(Variable,Variable),CompoundTerm(Functor(Atom),Arguments(Variable,Variable)),CompoundTerm(Functor(Atom),Arguments(Variable,Variable))))

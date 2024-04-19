@@ -1,49 +1,80 @@
-@top Program { (predicate | term)* }
+@top Program { program }
+program { (predicate | term | Keyword)* }
 
 @skip { whitespace | LineComment }
 
-term { literal | compound | Atom | Variable | Cut }
+term { compound | literal | Variable | Atom }
 
+// Supported literals are numbers and strings
 literal { Number | String }
+
+// All possible kinds of literal numbers in Gleam
 Number { Rational | Float | Hex | Octal | Binary | Integer }
 
 @local tokens {  
-  stringEnd[@name='"'] { '"' }
+  stringEnd[@name='"'] { doubleQuote }
   stringEscape { HexChar | UnicodeChar | EscapeChar }
   @else stringContent
 }
 
 @skip {} {
-  String { '"' (stringContent | stringEscape)* stringEnd }
-}
-
-predicate {
-  Rule { Functor Arguments ~functor ":-" commaSep<term> "."} |  
-  Directive { ":-" commaSep<term> "." } |
-  Fact { Functor Arguments ~functor "." }  
+  String { doubleQuote (stringContent | stringEscape)* stringEnd }
 }
 
 compound { 
-  List { "[" commaSep<term> "]" } |
+  List { leftBracket commaSep<term> rightBracket } |
   CompoundTerm { Functor Arguments ~functor }
+}
+
+predicate {
+  Directive { colonDash commaSep<term> dot } |
+  Rule { Functor Arguments ~functor colonDash sepBy<comma | semicolon, term> dot } |  
+  Fact { Functor Arguments ~functor dot }
 }
 
 Functor { Atom }
 Arguments { parenthesized<commaSep<term>> }
 
-parenthesized<content> { "(" content ")" }
-commaSep<content> { "" | content ("," content)* }
+parenthesized<content> { leftParenthesis content rightParenthesis }
+commaSep<content> { sepBy<comma, content> }
+sepBy<separator, content> { "" | content (separator content)* }
+
+keyword<value> { @specialize<lowerIdentifier, value> }
+Keyword {
+    keyword<"is">
+}
 
 @tokens {
   @precedence {
     Rational Float Hex Octal Binary Integer
+    Variable Atom
+    lowerIdentifier
+    leftBracket rightBracket leftParenthesis rightParenthesis comma doubleQuote percentage dot semicolon colonDash
+    whitespace
+    LineComment
   }
 
   whitespace { @whitespace+ }
 
-  LineComment { "%" ![\n]* }
+  leftBracket { "[" }
+  rightBracket { "]" }
+  leftParenthesis { "(" }
+  rightParenthesis { ")" }
+  comma { "," }
+  doubleQuote { '"' }
+  percentage { "%" }
+  dot { "." }
+  semicolon { ";" }
+  colonDash { ":-" }
 
-  Cut { "!" }
+  lowerIdentifier { @asciiLowercase+ }
+
+  Atom {
+    @asciiLowercase wordChar* |
+    "'" ("\\'" | ![\\'])+ "'"
+  }
+  Variable { (@asciiUppercase | "_") wordChar* }
+  wordChar { @asciiLetter | @digit | "_" }
 
   HexChar { "\\x" hexDigit hexDigit }
   UnicodeChar { 
@@ -52,6 +83,7 @@ commaSep<content> { "" | content ("," content)* }
   }
   EscapeChar { "\\" $[abcefnrsv\\'"`] }
 
+  // Numbers
   Rational { signed<digits<@digit>> $[r/] digits<@digit> }
   Float { signed<@digit>+ "." @digit+ }
   Hex { prefixed<"0x", hexDigit> }
@@ -65,15 +97,5 @@ commaSep<content> { "" | content ("," content)* }
   signed<digit> { "-"? digit}
   prefixed<prefix, digit> { signed<prefix digits<digit>> }
 
-  Atom {
-    @asciiLowercase wordChar* |
-    "'" ("\\'" | ![\\'])+ "'"
-  }
-  Variable { (@asciiUppercase | "_") wordChar* }
-  wordChar { @asciiLetter | @digit | "_" }
-
-  // A fallback that matches any other character in case all
-  // else fails. Needed to get a nice output and avoid strange
-  // overlapping tokens!
-  else { _ }
+  LineComment { percentage ![\n]* }
 }

@@ -3,7 +3,7 @@ program { (predicate | term | Keyword)* }
 
 @skip { whitespace | LineComment }
 
-term { compound | literal | Variable | Atom }
+term { compound | literal | Variable | Atom | Cut }
 
 // Supported literals are numbers and strings
 literal { Number | String }
@@ -21,16 +21,17 @@ Number { Rational | Float | Hex | Octal | Binary | Integer }
   String { doubleQuote (stringContent | stringEscape)* stringEnd }
 }
 
-compound { 
-  List { leftBracket commaSep<term> rightBracket } |
-  CompoundTerm { Functor Arguments ~functor }
-}
+compound { List | CompoundTerm }
+List { leftBracket commaSep<term> (pipe term ~term)? rightBracket }
+CompoundTerm { Functor Arguments ~functor }
 
-predicate {
-  Directive { colonDash commaSep<term> dot } |
-  Rule { Functor Arguments ~functor colonDash sepBy<comma | semicolon, term> dot } |  
-  Fact { Functor Arguments ~functor dot }
-}
+predicate {  Fact | Rule | Directive | Unification}
+Unification { term ~term equals term }
+Fact { Functor Arguments ~functor dot }
+Rule { Functor Arguments ~functor colonDash sepBy<comma | semicolon, term | Unification> dot }
+Directive { colonDash commaSep<term> dot }
+
+
 
 Functor { Atom }
 Arguments { parenthesized<commaSep<term>> }
@@ -47,9 +48,9 @@ Keyword {
 @tokens {
   @precedence {
     Rational Float Hex Octal Binary Integer
-    Variable Atom
+    Variable Atom Cut
     lowerIdentifier
-    leftBracket rightBracket leftParenthesis rightParenthesis comma doubleQuote percentage dot semicolon colonDash
+    colonDash equals leftBracket rightBracket leftParenthesis rightParenthesis comma doubleQuote percentage dot semicolon 
     whitespace
     LineComment
   }
@@ -66,8 +67,12 @@ Keyword {
   dot { "." }
   semicolon { ";" }
   colonDash { ":-" }
+  equals { "=" }
+  pipe { "|" }
 
   lowerIdentifier { @asciiLowercase+ }
+
+  Cut { "!" }
 
   Atom {
     @asciiLowercase wordChar* |
